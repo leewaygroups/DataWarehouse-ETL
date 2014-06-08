@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE root [
+  <!ELEMENT root (process)*>
+  <!ELEMENT process (script|group|option)*>
+  <!ATTLIST process id CDATA #REQUIRED>
+  <!ELEMENT option EMPTY>
+  <!ATTLIST option value CDATA #REQUIRED>
+  <!ATTLIST option id CDATA #REQUIRED>
+  <!ELEMENT script (option|content)*>
+  <!ATTLIST script id CDATA #REQUIRED>
+  <!ELEMENT content (#PCDATA)>
+  <!ATTLIST content xml:space CDATA "preserve">
+  <!ELEMENT group (model|option)*>
+  <!ATTLIST group id CDATA #REQUIRED>
+  <!ELEMENT model (sqlStr|option|field)*>
+  <!ATTLIST model id CDATA #REQUIRED>
+  <!ELEMENT sqlStr (#PCDATA)>
+  <!ATTLIST sqlStr xml:space CDATA "preserve">
+  <!ELEMENT field EMPTY>
+  <!ATTLIST field nameA CDATA "">
+  <!ATTLIST field format CDATA "">
+  <!ATTLIST field value CDATA "">
+  <!ATTLIST field end CDATA #REQUIRED>
+  <!ATTLIST field position CDATA #REQUIRED>
+  <!ATTLIST field type CDATA "0">
+  <!ATTLIST field name CDATA "">
+  <!ATTLIST field nameT CDATA "">
+]>
+
+<!--
+/*
+ *
+ *  Copyright (C) 2010 Prince Onyenike <leeewaygroups@gmail.com>
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+-->
+<root>
+  <process id="import">
+    <option id="connection" value="kdhdbserver"/>
+    <option id="targetConnection" value="IFRS-BOX"/>
+    <group id="common">
+      <option id="active" value="1"/>
+      <model id="SCENARIO_CASHFLOW">
+        <option id="program" value="file:/tmp/ldr/CFE.SCENARIO_CASHFLOW.ldr"/>
+        <option id="recordSize" value="100"/>
+        <sqlStr xml:space="preserve">select * from scenario_cashflow</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="ID_INSTRUMENT" type="0" position="0" end="39"/>
+        <field nameT="SCENARIO" name="SCENARIO" type="0" position="40" end="51"/>
+        <field nameT="ASSET_LIABILITY_FLAG" name="ASSET_LIABILITY_FLAG" type="0" position="52" end="52"/>
+        <field nameT="ID_CASHFLOW_TYPE" name="ID_CASHFLOW_TYPE" type="0" position="53" end="53"/>
+        <field nameT="ID_FEE_TYPE" name="ID_FEE_TYPE" type="0" position="54" end="65"/>
+        <field nameT="VALUE_DATE" name="VALUE_DATE" format="yyyyMMdd" type="1" position="66" end="73"/>
+        <field nameT="AMOUNT" name="AMOUNT" type="0" position="74" end="96"/>
+        <field nameT="ID_CURRENCY" name="ID_CURRENCY" type="0" position="97" end="99"/>
+      </model>
+      <model id="SCENARIO_CF_PROBABILITIES">
+        <option id="program" value="file:/tmp/ldr/CFE.SCENARIO_CF_PROBABILITIES.ldr"/>
+        <option id="recordSize" value="82"/>
+        <sqlStr xml:space="preserve">select * from scenario_cf_probabilities</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="ID_INSTRUMENT" type="0" position="0" end="39"/>
+        <field nameT="SCENARIO" name="SCENARIO" type="0" position="40" end="51"/>
+        <field nameT="ASSET_LIABILITY_FLAG" name="ASSET_LIABILITY_FLAG" type="0" position="52" end="52"/>
+        <field nameT="VALID_DATE" name="VALID_DATE" format="yyyyMMdd" type="1" position="53" end="60"/>
+        <field nameT="PERIOD_SCALAR" name="PERIOD_SCALAR" type="0" position="61" end="65"/>
+        <field nameT="ID_PERIOD_TYPE" name="ID_PERIOD_TYPE" type="0" position="66" end="66"/>
+        <field nameT="RATE" name="RATE" type="0" position="67" end="81"/>
+      </model>
+      <model id="CALENDAR">
+        <option id="program" value="file:/tmp/CFE.CALENDAR.ldr"/>
+        <option id="recordSize" value="20"/>
+        <sqlStr xml:space="preserve"></sqlStr>
+        <field nameT="ID_CALENDAR" type="0" position="0" end="11"/>
+        <field nameT="YEAR_OFFSET" type="0" position="12" end="16"/>
+        <field nameT="FRIDAY_IS_HOLIDAY" type="0" position="17" end="17"/>
+        <field nameT="SATURDAY_IS_HOLIDAY" type="0" position="18" end="18"/>
+        <field nameT="SUNDAY_IS_HOLIDAY" type="0" position="19" end="19"/>
+      </model>
+      <model id="CALENDAR_HOLIDAY">
+        <option id="program" value="file:/tmp/CFE.CALENDAR_HOLIDAY.ldr"/>
+        <option id="recordSize" value="20"/>
+        <sqlStr xml:space="preserve"></sqlStr>
+        <field nameT="ID_CALENDAR" type="0" position="0" end="11"/>
+        <field nameT="HOLIDAY" format="yyyyMMdd" type="1" position="12" end="19"/>
+      </model>
+      <model id="COLL_IMPAIRMENT">
+        <option id="program" value="file:/tmp/CFE.COLL_IMPAIRMENT.ldr"/>
+        <option id="recordSize" value="96"/>
+        <sqlStr xml:space="preserve"></sqlStr>
+        <field nameT="ID_INSTRUMENT" type="0" position="0" end="39"/>
+        <field nameT="ID_PORTFOLIO" type="0" position="40" end="79"/>
+        <field nameT="ASSIGNMENT_DATE" format="yyyyMMdd" type="1" position="80" end="87"/>
+        <field nameT="DEFAULT_DATE" format="yyyyMMdd" type="1" position="88" end="95"/>
+      </model>
+      <model id="CURRENCY">
+        <option id="program" value="file:/tmp/CFE.CURRENCY.ldr"/>
+        <option id="recordSize" value="258"/>
+        <sqlStr xml:space="preserve"></sqlStr>
+        <field nameT="ID_CURRENCY" type="0" position="0" end="2"/>
+        <field nameT="DESCRIPTION" type="0" position="3" end="257"/>
+      </model>
+      <model id="FEE_TYPE">
+        <option id="program" value="file:/tmp/CFE.FEE_TYPE.ldr"/>
+        <option id="recordSize" value="267"/>
+        <sqlStr xml:space="preserve"></sqlStr>
+        <field nameT="ID_FEE_TYPE" type="0" position="0" end="11"/>
+        <field nameT="DESCRIPTION" type="0" position="12" end="266"/>
+      </model>
+      <model id="FXRATE">
+        <option id="program" value="file:/tmp/CFE.FXRATE.ldr"/>
+        <option id="recordSize" value="29"/>
+        <sqlStr xml:space="preserve">select * from FXRATE;</sqlStr>
+        <field nameT="ID_CURRENCY_FROM" name="ID_CURRENCY_FROM" type="0" position="0" end="2"/>
+        <field nameT="ID_CURRENCY_INTO" name="ID_CURRENCY_INTO" type="0" position="3" end="5"/>
+        <field nameT="VALUE_DATE" name="VALUE_DATE" format="yyyyMMdd" type="1" position="6" end="13"/>
+        <field nameT="FXRATE" name="FXRATE" type="0" position="14" end="28"/>
+      </model>
+      <model id="INSTRUMENT">
+        <option id="program" value="file:/tmp/CFE.INSTRUMENT.ldr"/>
+        <option id="recordSize" value="159"/>
+        <sqlStr xml:space="preserve">SELECT
+	a.BondDesc + '-' +  b.id_instrument_type id_instrument
+	, null 					id_instrument_commitement
+	, b.id_instrument_type
+	, IssueDate 				start_date
+	, MaturityDate 			end_date
+	, 'NGN'					id_currency
+	, 'DEFAULT'				id_calendar
+	, 'N'					id_business_day_convention
+	, 'DEFAULT'				discount_curve
+	, '0'					discount_spread
+FROM "dbo"."BondCtrl" a
+	inner join (select distinct 
+				case
+					when TraCod in ('GBB', 'GBS') then 'sec_hft'
+	     			when TraCod in ('BB', 'BS', 'BPI', 'PAI', 'BPT', 'BAT') then 'sec_afs'
+	     			else 'error!' + TraCod	 				
+	  			end id_Instrument_Type
+				, BondDesc from DealHst where valdat &lt;= convert(Date, '$POSTINGDATE', 101)
+			  union select distinct 
+				case
+					when TraCod in ('GBB', 'GBS') then 'sec_hft'
+	     			when TraCod in ('BB', 'BS', 'BPI', 'PAI', 'BPT', 'BAT') then 'sec_afs'
+	     			else 'error!' + TraCod	 				
+	  			end id_Instrument_Type
+				, BondDesc from Deals where valdat &lt;= convert(Date, '$POSTINGDATE', 101)
+			  ) as b
+	on a.BondDesc=b.BondDesc
+;
+</sqlStr>        <field nameT="ID_INSTRUMENT" name="id_instrument" type="0" position="0" end="39"/>        <field nameT="ID_INSTRUMENT_COMMITMENT" name="id_instrument_commitement" type="0" position="40" end="79"/>        <field nameT="ID_INSTRUMENT_TYPE" name="id_instrument_type" type="0" position="80" end="91"/>        <field nameT="START_DATE" name="start_date" format="yyyyMMdd" type="1" position="92" end="99"/>        <field nameT="END_DATE" name="end_date" format="yyyyMMdd" type="1" position="100" end="107"/>        <field nameT="ID_CURRENCY" name="id_currency" type="0" position="108" end="110"/>        <field nameT="ID_CALENDAR" name="id_calendar" type="0" position="111" end="122"/>        <field nameT="ID_BUSINESS_DAY_CONVENTION" name="id_business_day_convention" type="0" position="123" end="134"/>        <field nameT="DISCOUNT_CURVE" name="discount_curve" type="0" position="135" end="146"/>        <field nameT="DISCOUNT_SPREAD" name="discount_spread" type="0" position="147" end="158"/>      </model>      <model id="INSTRUMENT_ATTRIBUTE">        <option id="program" value="file:/tmp/CFE.INSTRUMENT_ATTRIBUTE.ldr"/>        <option id="recordSize" value="120"/>        <sqlStr xml:space="preserve">select * from instrument_attribute</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="ID_INSTRUMENT" type="0" position="0" end="39"/>
+        <field nameT="ID_ATTRIBUTE" name="ID_ATTRIBUTE" type="0" position="40" end="79"/>
+        <field nameT="ATTRIBUTE_VALUE" name="ATTRIBUTE_VALUE" type="0" position="80" end="119"/>
+      </model>
+      <model id="INSTRUMENT_IMPORT_MEASURE">
+        <option id="program" value="file:/tmp/ldr/CFE.INSTRUMENT_IMPORT_MEASURE.ldr"/>
+        <option id="recordSize" value="68"/>
+        <sqlStr xml:space="preserve">select * from instrument_import_measure</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="ID_INSTRUMENT" type="0" position="0" end="39"/>
+        <field nameT="ID_MEASURE" name="ID_MEASURE" type="0" position="40" end="44"/>
+        <field nameT="VALUE" name="VALUE" type="0" position="45" end="67"/>
+      </model>
+      <model id="INTEREST_PERIOD">
+        <option id="program" value="file:/tmp/CFE.INTEREST_PERIOD.ldr"/>
+        <option id="recordSize" value="183"/>
+        <sqlStr xml:space="preserve">SELECT
+	BondDesc 		"id_instrument"
+	, '0' 			"id_fixingmode"
+	, IssueDate 	"fixing_date"
+	, MaturityDate  "change_date"
+	, Coupon / 100	"base_rate"
+	, null			"base_margin_rate"
+	, null			"par_rate"				-- for BELOW MARKET RATE instruments only
+	, null			"par_margin_rate"		-- for BELOW MARKET RATE instruments only
+	, 'ARREARS'		"id_payment_convention"
+	, 'act/act'		"id_day_count_convention"
+	, null			"id_day_incl_conevntion"
+	, null			"fix_amount"
+	, null			"id_currency_fix_amount"
+	, null			"id_script"
+FROM "dbo"."BondCtrl"</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="id_instrument" type="0" position="0" end="39"/>
+        <field nameT="ID_FIXINGMODE" name="id_fixingmode" type="0" position="40" end="44"/>
+        <field nameT="FIXING_DATE" name="fixing_date" format="yyyyMMdd" type="1" position="45" end="52"/>
+        <field nameT="CHANGE_DATE" name="change_date" format="yyyyMMdd" type="1" position="53" end="60"/>
+        <field nameT="BASE_RATE" name="base_rate" type="0" position="61" end="72"/>
+        <field nameT="BASE_MARGIN_RATE" name="base_margin_rate" type="0" position="73" end="84"/>
+        <field nameT="PAR_RATE" name="par_rate" type="0" position="85" end="96"/>
+        <field nameT="PAR_MARGIN_RATE" name="par_margin_rate" type="0" position="97" end="108"/>
+        <field nameT="ID_PAYMENT_CONVENTION" name="id_payment_convention" type="0" position="109" end="120"/>
+        <field nameT="ID_DAY_COUNT_CONVENTION" name="id_day_count_convention" type="0" position="121" end="132"/>
+        <field nameT="ID_DAY_INCL_CONVENTION" name="id_day_incl_conevntion" type="0" position="133" end="144"/>
+        <field nameT="FIX_AMOUNT" name="fix_amount" type="0" position="145" end="167"/>
+        <field nameT="ID_CURRENCY_FIX_AMOUNT" name="id_currency_fix_amount" type="0" position="168" end="170"/>
+        <field nameT="ID_SCRIPT" name="id_script" type="0" position="171" end="182"/>
+      </model>
+      <model id="ONE_TIME_PAYMENT">
+        <option id="program" value="file:/tmp/CFE.ONE_TIME_PAYMENT.ldr"/>
+        <option id="recordSize" value="130"/>
+        <sqlStr xml:space="preserve">SELECT
+	BondDesc 				"id_instrument"
+	, 'D' 					"id_cash_flow_type"
+	, null 					"id_fee_type"
+	, IssueDate 			"value_date"
+	, 'N'					"id_business_day_convention"
+	, IssuedValue			"Amount"
+	, null					"yield_enhancing_rate"
+	, 'NGN'					"id_currency"
+	, IssueDate 			"start_date"
+	, MaturityDate 			"end_date"
+FROM "dbo"."BondCtrl"
+;
+</sqlStr>        <field nameT="ID_INSTRUMENT" name="id_instrument" type="0" position="0" end="39"/>        <field nameT="ID_CASHFLOW_TYPE" name="id_cash_flow_type" type="0" position="40" end="40"/>        <field nameT="ID_FEE_TYPE" name="id_fee_type" type="0" position="41" end="52"/>        <field nameT="VALUE_DATE" name="value_date" format="yyyyMMdd" type="1" position="53" end="60"/>        <field nameT="ID_BUSINESS_DAY_CONVENTION" name="id_business_day_convention" type="0" position="61" end="72"/>        <field nameT="AMOUNT" name="Amount" type="0" position="73" end="95"/>        <field nameT="YIELD_ENHANCING_RATE" name="yield_enhancing_rate" type="0" position="96" end="110"/>        <field nameT="ID_CURRENCY" name="id_currency" type="0" position="111" end="113"/>        <field nameT="START_DATE" name="start_date" format="yyyyMMdd" type="1" position="114" end="121"/>        <field nameT="END_DATE" name="end_date" format="yyyyMMdd" type="1" position="122" end="129"/>      </model>      <model id="PORTFOLIO_COLL_IMPAIRMENT">        <option id="program" value="file:/tmp/CFE.PORTFOLIO_COLL_IMPAIRMENT.ldr"/>        <option id="recordSize" value="64"/>        <sqlStr xml:space="preserve"></sqlStr>        <field nameT="ID_PORTFOLIO" type="0" position="0" end="39"/>        <field nameT="RATE_PD" type="0" position="40" end="51"/>        <field nameT="RATE_LGD" type="0" position="52" end="63"/>      </model>      <model id="RATE_CURVE">        <option id="program" value="file:/tmp/CFE.RATE_CURVE.ldr"/>        <option id="recordSize" value="41"/>        <sqlStr xml:space="preserve">select * from rate_curve</sqlStr>
+        <field nameT="ID_RATE" name="ID_RATE" type="0" position="0" end="11"/>
+        <field nameT="VALID_DATE" name="VALID_DATE" format="yyyyMMdd" type="1" position="12" end="19"/>
+        <field nameT="PERIOD_SCALAR" name="PERIOD_SCALAR" type="0" position="20" end="24"/>
+        <field nameT="ID_PERIOD_TYPE" name="ID_PERIOD_TYPE" type="0" position="25" end="25"/>
+        <field nameT="RATE" name="RATE" type="0" position="26" end="40"/>
+      </model>
+      <model id="RATE_HIST">
+        <option id="program" value="file:/tmp/CFE.RATE_HIST.ldr"/>
+        <option id="recordSize" value="35"/>
+        <sqlStr xml:space="preserve"></sqlStr>
+        <field nameT="ID_RATE" type="0" position="0" end="11"/>
+        <field nameT="VALUE_DATE" format="yyyyMMdd" type="1" position="12" end="19"/>
+        <field nameT="RATE" type="0" position="20" end="34"/>
+      </model>
+      <model id="RECONCILIATION_NOMINAL">
+        <option id="program" value="file:/tmp/CFE.RECONCILIATION_NOMINAL.ldr"/>
+        <option id="recordSize" value="71"/>
+        <sqlStr xml:space="preserve">select * from RECONCILIATION_NOMINAL;</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="ID_INSTRUMENT" type="0" position="0" end="39"/>
+        <field nameT="VALUE_DATE" name="VALUE_DATE" format="yyyyMMdd" type="1" position="40" end="47"/>
+        <field nameT="NOMINAL_BALANCE" name="NOMINAL_BALANCE" type="0" position="48" end="70"/>
+      </model>
+      <model id="SCHEDULE">
+        <option id="program" value="file:/tmp/CFE.SCHEDULE.ldr"/>
+        <option id="recordSize" value="137"/>
+        <sqlStr xml:space="preserve">SELECT
+	BondDesc 		"id_instrument"
+	, 'I'			"id_cash_flow_type"
+	, null			"id_fee_type"
+	, null			"first_drop_date"
+	, null			"second_drop_date"
+	, null			"enforce_eom"
+	, null			"last_drop_date"
+	, '6'			"period_scalar"
+	, 'M'			"period_type"
+	, 'N'			"id_business_day_convention"
+	, null			"amount"
+	, null 			"yield_enhancing_rate"
+	, null			"id_currency" 
+FROM "dbo"."BondCtrl"</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="id_instrument" type="0" position="0" end="39"/>
+        <field nameT="ID_CASHFLOW_TYPE" name="id_cash_flow_type" type="0" position="40" end="40"/>
+        <field nameT="ID_FEE_TYPE" name="id_fee_type" type="0" position="41" end="52"/>
+        <field nameT="FIRST_DROP" name="first_drop_date" format="yyyyMMdd" type="1" position="53" end="60"/>
+        <field nameT="SECOND_DROP" name="second_drop_date" format="yyyyMMdd" type="1" position="61" end="68"/>
+        <field nameT="ENFORCE_EOM" name="enforce_eom" type="0" position="69" end="69"/>
+        <field nameT="LAST_DROP" name="last_drop_date" format="yyyyMMdd" type="1" position="70" end="77"/>
+        <field nameT="PERIOD_SCALAR" name="period_scalar" type="0" position="78" end="82"/>
+        <field nameT="ID_PERIOD_TYPE" name="period_type" type="0" position="83" end="83"/>
+        <field nameT="ID_BUSINESS_DAY_CONVENTION" name="id_business_day_convention" type="0" position="84" end="95"/>
+        <field nameT="AMOUNT" name="amount" type="0" position="96" end="118"/>
+        <field nameT="YIELD_ENHANCING_RATE" name="yield_enhancing_rate" type="0" position="119" end="133"/>
+        <field nameT="ID_CURRENCY" name="id_currency" type="0" position="134" end="136"/>
+      </model>
+      <model id="SCRIPT">
+        <option id="program" value="file:/tmp/CFE.SCRIPT.ldr"/>
+        <option id="recordSize" value="24"/>
+        <sqlStr xml:space="preserve"></sqlStr>
+        <field nameT="ID_SCRIPT" type="0" position="0" end="11"/>
+        <field nameT="ID_LANGUAGE" type="0" position="12" end="23"/>
+      </model>
+      <model id="TRANSACTION">
+        <option id="program" value="file:/tmp/CFE.TRANSACTION.ldr"/>
+        <option id="recordSize" value="166"/>
+        <sqlStr xml:space="preserve">select
+	BondDesc + '-' + case
+		when TraCod in ('GBB', 'GBS') then 'sec_hft'
+	     when TraCod in ('BB', 'BS', 'BPI', 'PAI', 'BPT', 'BAT') then 'sec_afs'
+	     else 'error!' + TraCod	 				
+	end														"id_instrument"
+	, case
+		when substring(TraRef,1,1) ='D' then 'B-'
+		else 'S-'
+	  end + TraRef											"id_transaction"
+	, ValDat												"value_date"
+	, TrfDat												"settlement_date"
+	, null													"quantity"
+	, case 
+		when substring(TraRef,1,1)='C' then -NomAmt
+		else NomAmt
+	  end													"settlement_amount"	
+	, BondPrice / 100										"price"
+	, 'C'													"clean_flag"
+from DealHst a
+where
+	exists (select 1 from BondCtrl where BondDesc=a.BondDesc)
+	and valdat &lt;= convert(Date, '$POSTINGDATE', 101)
+union select
+	BondDesc + '-' + case
+		when TraCod in ('GBB', 'GBS') then 'sec_hft'
+	     when TraCod in ('BB', 'BS', 'BPI', 'PAI', 'BPT', 'BAT') then 'sec_afs'
+	     else 'error!' + TraCod	 				
+	end														"id_instrument"
+	, case
+		when substring(TraRef,1,1) ='D' then 'B-'
+		else 'S-'
+	  end + TraRef											"id_transaction"
+	, ValDat												"value_date"
+	, TrfDat												"settlement_date"
+	, null													"quantity"
+	, case 
+		when substring(TraRef,1,1)='C' then -NomAmt
+		else NomAmt
+	  end													"settlement_amount"	
+	, BondPrice / 100										"price"
+	, 'C'													"clean_flag"
+from Deals a
+where
+	exists (select 1 from BondCtrl where BondDesc=a.BondDesc)
+	and valdat &lt;= convert(Date, '$POSTINGDATE', 101)
+union all select
+	BondDesc + '-' + case
+		when TraCod in ('GBB', 'GBS') then 'sec_hft'
+	     when TraCod in ('BB', 'BS', 'BPI', 'PAI', 'BPT', 'BAT') then 'sec_afs'
+	     else 'error!' + TraCod	 				
+	end														"id_instrument"
+	, case
+		when substring(TraRef,1,1) ='D' then 'B-'
+		else 'S-'
+	  end + TraRef											"id_transaction"
+	, ValDat												"value_date"
+	, TrfDat												"settlement_date"
+	, null													"quantity"
+	, case 
+		when substring(TraRef,1,1)='C' then -NomAmt
+		else NomAmt
+	  end													"settlement_amount"	
+	, BondPrice / 100										"price"
+	, 'C'													"clean_flag"
+from dealsf a
+where
+	exists (select 1 from BondCtrl where BondDesc=a.BondDesc)
+	and valdat &lt;= convert(Date, '$POSTINGDATE', 101)
+order by 1, 3, 2</sqlStr>
+        <field nameT="ID_INSTRUMENT" name="id_instrument" type="0" position="0" end="39"/>
+        <field nameT="ID_TRANSACTION" name="id_transaction" type="0" position="40" end="79"/>
+        <field nameT="VALUE_DATE" name="value_date" format="yyyyMMdd" type="1" position="80" end="87"/>
+        <field nameT="SETTLEMENT_DATE" name="settlement_date" format="yyyyMMdd" type="1" position="88" end="95"/>
+        <field nameT="QUANTITY" name="quantity" type="0" position="96" end="118"/>
+        <field nameT="SETTLEMENT_AMOUNT" name="settlement_amount" type="0" position="119" end="141"/>
+        <field nameT="PRICE" name="price" type="0" position="142" end="164"/>
+        <field nameT="CLEAN_FLAG" name="clean_flag" type="0" position="165" end="165"/>
+      </model>
+      <model id="INSTRUMENT_PRICE">
+        <option id="program" value="file:/tmp/CFE.INSTRUMENT_PRICE.ldr"/>
+        <option id="recordSize" value="83"/>
+        <sqlStr xml:space="preserve">SELECT
+	BondDesc 				"id_instrument"
+	/*, b.TraRef 			"id_transaction"*/
+	, ValDat 				"valid_timestamp"
+	, BondPrice			"price"	
+	, null					"id_price_type"
+	, null					"valid_days"
+	
+FROM  "dbo"."Deals" ;
+</sqlStr>        <field nameT="ID_INSTRUMENT" name="id_instrument" type="0" position="0" end="39"/>        <field nameT="VALID_TIMESTAMP" name="valid_timestamp" format="yyyyMMddhhmmss" type="1" position="40" end="53"/>        <field nameT="PRICE" name="price" type="0" position="54" end="76"/>        <field nameT="ID_PRICE_TYPE" name="id_price_type" type="0" position="77" end="77"/>        <field nameT="VALID_DAYS" name="valid_days" type="0" position="78" end="82"/>      </model>    </group>    <option id="dependancies" value=""/>    <script id="10_deleteImportData">      <content xml:space="preserve">/*
+ *
+ *  Copyright (C) 2010 Prince Onyenike &lt;leewaygroups@gmail.com&gt;
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+import com.manticore.etl.*;
+import com.manticore.etl.database.*;
+import java.sql.*;
+import groovy.sql.Sql;
+
+
+logger.info("truncate import tables in schema CFE");
+def String[] tables=[
+	"CFE.FXRATE"
+	, "CFE.INSTRUMENT"
+	, "CFE.INSTRUMENT_ATTRIBUTE"
+	, "CFE.INSTRUMENT_IMPORT_MEASURE"
+	, "CFE.INTEREST_PERIOD"
+	, "CFE.ONE_TIME_PAYMENT"
+	, "CFE.TRANSACTION"
+	, "CFE.INSTRUMENT_PRICE"
+	, "CFE.RATE_CURVE"
+	, "CFE.RATE_HIST"
+	, "CFE.RECONCILIATION_NOMINAL"
+	, "CFE.SCHEDULE"
+	];
+tables.each() {
+		int r=connections.executeUpdate(targetConnection, "TRUNCATE TABLE ${it}");
+		logger.info("Deleted $r rows from $it"); 
+}
+
+return true</content>
+      <option id="active" value="1"/>
+      <option id="language" value="groovy"/>
+      <option id="phase" value="before"/>
+    </script>
+  </process>
+  <process id="process">
+    <option id="connection" value="IFRS-BOX"/>
+    <option id="targetConnection" value="IFRS-BOX"/>
+    <option id="dependancies" value="import"/>
+    <script id="50_process">
+      <content xml:space="preserve">/*
+ *
+ *  Copyright (C) 2011 Prince Onyenike &lt;leewaygroups@gmail.com&gt;
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or (at
+ *  your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+import com.manticore.cashflowengine.calendar.IndexedCalendar;
+import com.manticore.cashflowengine.calendar.IndexedCalendarMap;
+import com.manticore.cashflowengine.calendar.holiday.*;
+import com.manticore.cashflowengine.configuration.*;
+import com.manticore.cashflowengine.instrument.Dispatcher;
+import com.manticore.cashflowengine.instrument.Instrument;
+import com.manticore.database.DataReader;
+import com.manticore.database.DataWriter;
+import com.manticore.etl.database.ETLConnection;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+ETLConnection con = connections.get(connection);
+
+DataWriter.etlConnection=con;
+ETLConnection.prepareSqlMap(DataWriter.resourceName);
+DataWriter.prepare();
+
+DataReader.etlConnection=con;
+ETLConnection.prepareSqlMap(DataReader.resourceName);
+
+// initialy define a basic calendar and put it into the database
+IndexedCalendarMap.put(new IndexedCalendar(
+		"DEFAULT", Arrays.asList(
+		new NewYearsDay(), new GoodFridayObserved(), new EasterMonday(), new MayDay(), new ChristmasEve()
+		, new ChristmasDay(), new BoxingDay(), new NewYearsEve())));
+DataWriter.writeCalendarMap();
+
+// define some fee types and write them into the database
+FeeTypeMap.put(new FeeType("K", "K-Fee"));
+FeeTypeMap.put(new FeeType("A", "A-Fee"));
+DataWriter.writeFeeTypeMap();
+
+//define the posting date
+Settings.put("debug", "0");
+Settings.put("scope", "1");
+
+Date valueDate=DateFormat.getDateInstance(DateFormat.SHORT).parse(VALUE_DATE);
+Date valueDate_p=DateFormat.getDateInstance(DateFormat.SHORT).parse(VALUE_DATE_P);
+Date valueDate_pp=DateFormat.getDateInstance(DateFormat.SHORT).parse(VALUE_DATE_PP);
+Date postingDate=new Date();
+
+Dispatcher dispatcher = new Dispatcher(valueDate, valueDate_p, valueDate_pp, postingDate) {
+	@Override
+	public boolean offerReady(Instrument instrument) {
+		while (!DataWriter.instrumentQueue.offer(instrument)) {
+			try {
+				DataWriter.writeInstrumentMeasures(valueDate, postingDate.getTime(), CurrencyMap.get("USD"));
+			} catch (SQLException ex) {
+				logger.log(Level.SEVERE, null, ex);
+			} catch (InterruptedException ex) {
+				logger.log(Level.SEVERE, null, ex);
+			}
+		}
+		return true;
+	}
+};
+
+dispatcher.processDatabase();</content>
+      <option id="active" value="1"/>
+      <option id="language" value="groovy"/>
+      <option id="phase" value="init"/>
+    </script>
+  </process>
+</root>
